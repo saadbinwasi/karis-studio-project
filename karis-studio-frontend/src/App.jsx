@@ -154,7 +154,7 @@ function App() {
           <div className="hero-content">
             <p className="eyebrow">
               <Sparkles size={15} />
-              PREMIUM BEAUTY EXPERIENCE
+              best BEAUTY EXPERIENCE
             </p>
 
             <h1>
