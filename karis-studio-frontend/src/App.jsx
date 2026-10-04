@@ -450,7 +450,7 @@ function App() {
               <MapPin size={21} />
               <div>
                 <strong>Studio Address</strong>
-                <span>123 Beauty Avenue, Karachi, Pakistan</span>
+                <span>123 Beauty Avenue, islamabad, Pakistan</span>
               </div>
             </div>
 
