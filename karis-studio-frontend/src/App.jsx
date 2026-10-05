@@ -99,6 +99,11 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [bookingOpen, setBookingOpen] = useState(false);
   const [selectedService, setSelectedService] = useState("");
+  const [name, setName] = useState("");
+  const [service, setService] = useState("");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [phone, setPhone] = useState("");
 
   const openBooking = (service = "") => {
     setSelectedService(service);
@@ -522,14 +527,33 @@ function App() {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                alert("Booking request received!");
-                setBookingOpen(false);
+
+                const bookingData = {
+                  name: name,
+                  phone: phone,
+                  service: selectedService,
+                  date: date,
+                  time: time,
+                };
+
+
+                fetch("http://127.0.0.1:8000/bookings", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(bookingData),
+                });
+                console.log("Booking data sent to the backend:", bookingData);
               }}
+              
             >
               <label>
                 Your Name
                 <input
                   type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   placeholder="Enter your name"
                   required
                 />
@@ -539,6 +563,8 @@ function App() {
                 Phone Number
                 <input
                   type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
                   placeholder="+92 300 1234567"
                   required
                 />
@@ -563,12 +589,22 @@ function App() {
               <div className="form-row">
                 <label>
                   Date
-                  <input type="date" required />
+                  <input
+                    type="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    required
+                  />
                 </label>
 
                 <label>
                   Time
-                  <input type="time" required />
+                  <input
+                    type="time"
+                    value={time}
+                    onChange={(e) => setTime(e.target.value)}
+                    required
+                  />
                 </label>
               </div>
 
