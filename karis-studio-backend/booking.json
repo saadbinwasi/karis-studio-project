@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "name": "saad",
+        "service": "Luxury Pedicure",
+        "date": "2026-11-06",
+        "time": "17:53",
+        "phone": "+923132257112"
+    },
+    {
+        "id": 2,
+        "name": "wania",
+        "service": "Glow Facial",
+        "date": "2026-11-25",
+        "time": "05:54",
+        "phone": "+923132257118"
+    }
+]
