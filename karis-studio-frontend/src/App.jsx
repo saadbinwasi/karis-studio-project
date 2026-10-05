@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import "./App.css";
+import Admin from "./Admin";
 
 const services = [
   {
@@ -104,6 +105,10 @@ function App() {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [phone, setPhone] = useState("");
+
+  if (window.location.pathname === "/admin") {
+    return <Admin />;
+  }
 
   const openBooking = (service = "") => {
     setSelectedService(service);
@@ -546,7 +551,7 @@ function App() {
                 });
                 console.log("Booking data sent to the backend:", bookingData);
               }}
-              
+
             >
               <label>
                 Your Name

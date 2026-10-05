@@ -24,14 +24,20 @@ class Booking(BaseModel):
     time: str
     phone: str
     
+class AdminLogin(BaseModel):
+    password: str
+    username: str
 
 
 
-@app.get("/")
-def home():
+@app.get("/bookings")
+def get_bookings():
+
+    with open("booking.json", "r") as f:
+        bookings = json.load(f)
+
     return {
-        "message": "Welcome to Karis Studio API",
-        "status": "running"
+        "bookings": bookings
     }
     
     
@@ -59,4 +65,16 @@ def save_bookings(booking: Booking):
         "message": "Booking saved successfully!",
         "status": "running",
         "booking": new_booking
+    }
+
+@app.post("/admin/login")
+def admin_login(admin: AdminLogin):
+    if admin.username == "admin" and admin.password == "12345":
+        return {
+            "message": "Login successful",
+            "success": "True"
+        }
+    return {
+        "message": "Invalid username or password",
+        "success": "False"
     }
