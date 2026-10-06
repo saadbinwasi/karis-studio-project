@@ -11,62 +11,20 @@ import {
   Star,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import Admin from "./Admin";
 
-const services = [
-  {
-    category: "Nails",
-    title: "Signature Manicure",
-    description:
-      "A complete nail care ritual with shaping, cuticle care, massage and your choice of finish.",
-    price: "PKR 3,500",
-    duration: "60 min",
-  },
-  {
-    category: "Nails",
-    title: "Luxury Pedicure",
-    description:
-      "Relax, refresh and restore with exfoliation, nourishing treatment and a beautiful finish.",
-    price: "PKR 4,000",
-    duration: "75 min",
-  },
-  {
-    category: "Hair",
-    title: "Signature Haircut",
-    description:
-      "A personalized cut and styling session designed around your look and lifestyle.",
-    price: "PKR 4,500",
-    duration: "60 min",
-  },
-  {
-    category: "Skin",
-    title: "Glow Facial",
-    description:
-      "Deep cleansing, gentle exfoliation and hydration for fresh, luminous-looking skin.",
-    price: "PKR 5,500",
-    duration: "75 min",
-  },
-  {
-    category: "Makeup",
-    title: "Event Makeup",
-    description:
-      "Elegant professional makeup tailored to your event, outfit and personal style.",
-    price: "PKR 8,000",
-    duration: "90 min",
-  },
-  {
-    category: "Beauty",
-    title: "Relaxation Massage",
-    description:
-      "A calming treatment designed to help you slow down, release tension and reset.",
-    price: "PKR 6,000",
-    duration: "60 min",
-  },
-];
 
 const team = [
+  {
+    name: "Wania Adnan",
+    role: "Founder Karis Studio",
+    image:
+      "/images/Confident Salon Founder Portrait.png",
+
+  },
+
   {
     name: "Sarah Khan",
     role: "Senior Nail Artist",
@@ -85,7 +43,9 @@ const team = [
     image:
       "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=700&q=80",
   },
+
 ];
+
 
 const gallery = [
   "https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=900&q=80",
@@ -97,6 +57,18 @@ const gallery = [
 ];
 
 function App() {
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/services")
+      .then((response) => response.json())
+      .then((data) => {
+        setServices(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching services:", error);
+      });
+  }, []);
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [bookingOpen, setBookingOpen] = useState(false);
   const [selectedService, setSelectedService] = useState("");
@@ -105,6 +77,7 @@ function App() {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [phone, setPhone] = useState("");
+  const [services, setServices] = useState([]);
 
   if (window.location.pathname === "/admin") {
     return <Admin />;
@@ -236,13 +209,19 @@ function App() {
           <span>WELLNESS</span>
         </div>
 
+
         {/* SERVICES */}
+
         <section className="section services-section" id="services">
           <div className="section-heading">
             <div>
               <p className="eyebrow">OUR SERVICES</p>
-              <h2>Designed around <em>you.</em></h2>
+
+              <h2>
+                Designed around <em>you.</em>
+              </h2>
             </div>
+
             <p>
               From everyday beauty rituals to special occasions, every
               treatment is thoughtfully designed to make you feel your best.
@@ -251,31 +230,57 @@ function App() {
 
           <div className="services-grid">
             {services.map((service, index) => (
-              <article className="service-card" key={service.title}>
+              <article className="service-card" key={service.id}>
+
+                {/* Service Number */}
                 <div className="service-number">
-                  0{index + 1}
+                  {String(index + 1).padStart(2, "0")}
                 </div>
 
-                <p className="service-category">{service.category}</p>
+                {/* Category */}
+                <p className="service-category">
+                  {service.category}
+                </p>
 
-                <h3>{service.title}</h3>
+                {/* Title */}
+                <h3>
+                  {service.title}
+                </h3>
 
+                {/* Description */}
                 <p className="service-description">
                   {service.description}
                 </p>
 
+                {/* Service Image */}
+                <img
+                  src={service.image}
+                  alt={service.title}
+                  className="service-image"
+                />
+
+                {/* Bottom */}
                 <div className="service-bottom">
+
                   <div>
-                    <strong>{service.price}</strong>
+                    <strong>
+                      PKR {service.price.toLocaleString()}
+                    </strong>
+
                     <span>
                       <Clock3 size={14} />
-                      {service.duration}
+                      {service.duration} min
                     </span>
                   </div>
 
-                  <button onClick={() => openBooking(service.title)}>
+                  <button
+                    type="button"
+                    onClick={() => openBooking(service.title)}
+                    aria-label={`Book ${service.title}`}
+                  >
                     <ArrowRight size={19} />
                   </button>
+
                 </div>
               </article>
             ))}

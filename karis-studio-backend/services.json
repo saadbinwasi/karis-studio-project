@@ -1,0 +1,56 @@
+[
+    {
+        "id": 1,
+        "category": "NAILS",
+        "title": "Signature Manicure",
+        "description": "A complete nail care ritual with shaping, cuticle care, massage and your choice of finish.",
+        "price": 3500,
+        "duration": 60,
+        "image": "https://images.unsplash.com/photo-1604654894610-df63bc536371"
+    },
+    {
+        "id": 2,
+        "category": "NAILS",
+        "title": "Luxury Pedicure",
+        "description": "Relax, refresh and restore with exfoliation, nourishing treatment and a beautiful finish.",
+        "price": 4000,
+        "duration": 75,
+        "image": "https://images.unsplash.com/photo-1519014816548-bf5fe059798b"
+    },
+    {
+        "id": 3,
+        "category": "HAIR",
+        "title": "Signature Haircut",
+        "description": "A personalized cut and styling session designed around your look and lifestyle.",
+        "price": 4500,
+        "duration": 60,
+        "image": "https://images.unsplash.com/photo-1562322140-8baeececf3df"
+    },
+    {
+        "id": 4,
+        "category": "SKIN",
+        "title": "Glow Facial",
+        "description": "Deep cleansing, gentle exfoliation and hydration for fresh, luminous-looking skin.",
+        "price": 5500,
+        "duration": 75,
+        "image": "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881"
+    },
+    {
+        "id": 5,
+        "category": "MAKEUP",
+        "title": "Event Makeup",
+        "description": "Elegant professional makeup tailored to your event, outfit and personal style.",
+        "price": 8000,
+        "duration": 90,
+        "image": "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2"
+    },
+    {
+        "id": 6,
+        "category": "BEAUTY",
+        "title": "Relaxation Massage",
+        "description": "A calming treatment designed to help you slow down, release tension and reset.",
+        "price": 6000,
+        "duration": 60,
+        "image": "https://images.unsplash.com/photo-1544161515-4ab6ce6db874"
+    }
+]
