@@ -8,18 +8,65 @@ function AdminDashboard() {
     }, []);
 
     async function getBookings() {
+
+        const token = localStorage.getItem(
+            "access_token"
+        );
+
         try {
+
             const response = await fetch(
-                "http://127.0.0.1:8000/bookings"
+                "http://127.0.0.1:8000/bookings",
+                {
+                    method: "GET",
+
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
             );
+
+            if (response.status === 401) {
+
+                localStorage.removeItem(
+                    "access_token"
+                );
+
+                window.location.reload();
+
+                return;
+            }
+
+            if (response.status === 403) {
+
+                console.log(
+                    "Admin access required"
+                );
+
+                return;
+            }
 
             const data = await response.json();
 
             setBookings(data.bookings);
+
         } catch (error) {
-            console.error("Error fetching bookings:", error);
+
+            console.error(
+                "Error fetching bookings:",
+                error
+            );
         }
     }
+
+    function logout() {
+
+    localStorage.removeItem(
+        "access_token"
+    );
+
+    window.location.reload();
+}
 
     return (
         <div className="admin-page">
@@ -31,7 +78,10 @@ function AdminDashboard() {
                     <h1>Admin Dashboard</h1>
                 </div>
 
-                <button className="logout-button">
+                <button
+                    className="logout-button"
+                    onClick={logout}
+                >
                     Logout
                 </button>
             </header>
