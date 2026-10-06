@@ -39,16 +39,20 @@ function Admin() {
 
       console.log("Backend response:", data);
 
-      if (data.success) {
-        setLoggedIn(true);
-      } else {
-        setMessage(data.message);
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      setMessage("Cannot connect to server.");
-    }
-  }
+     if (data.success) {
+
+    localStorage.setItem(
+        "access_token",
+        data.access_token
+    );
+
+    setLoggedIn(true);
+
+} else {
+
+    setMessage(data.message);
+
+}
 
   return (
     <div>

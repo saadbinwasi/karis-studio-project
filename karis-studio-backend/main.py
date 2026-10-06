@@ -1,10 +1,19 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException, status
 from pydantic import BaseModel 
 from fastapi.middleware.cors import CORSMiddleware
 import json
 from pwdlib import PasswordHash
+import jwt
+import os
+from dotenv import load_dotenv
+from datetime import datetime, timedelta, timezone
+from fastapi.security import OAuth2PasswordBearer
+
 
 password_hash = PasswordHash.recommended()
+load_dotenv(dotenv_path=".env")
+SECRET_KEY = os.getenv("SECRET_KEY")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="admin/login")
 
 
 ADMIN_USERNAME = "admin"
@@ -12,7 +21,61 @@ ADMIN_USERNAME = "admin"
 ADMIN_PASSWORD_HASH = "$argon2id$v=19$m=65536,t=3,p=4$EWp4FucckgPGpxs5RNXbkA$2JjhwVleHSIvI0kyMlxIzg7xYv4owtYGgJ3PrI3WgdI"
 
 
+def create_access_token(username: str, role: str):
 
+    payload = {
+        "sub": username,
+        "role": role,
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=30)
+    }
+
+    token = jwt.encode(
+        payload,
+        SECRET_KEY,
+        algorithm="HS256"
+    )
+
+    return token
+
+def get_current_user(token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(
+            token,
+            SECRET_KEY,
+            algorithms=["HS256"]
+        )
+
+        username = payload.get("sub")
+        role = payload.get("role")
+
+        if username is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid authentication credentials"
+            )
+
+        return {
+            "username": username,
+            "role": role
+        }
+
+    except jwt.InvalidTokenError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication credentials"
+        )
+
+def get_current_admin(
+    current_user: dict = Depends(get_current_user)
+):
+
+    if current_user["role"] != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin access required"
+        )
+
+    return current_user
 
 app = FastAPI(
     title="Karis Studio API",
@@ -42,7 +105,9 @@ class AdminLogin(BaseModel):
 
 
 @app.get("/bookings")
-def get_bookings():
+def get_bookings(
+    current_admin: dict = Depends(get_current_admin)
+):
 
     with open("booking.json", "r") as f:
         bookings = json.load(f)
@@ -81,24 +146,23 @@ def save_bookings(booking: Booking):
 @app.post("/admin/login")
 def admin_login(admin: AdminLogin):
 
-    if admin.username != ADMIN_USERNAME:
-        return {
-            "message": "Invalid username or password",
-            "success": False
-        }
-
-    if not password_hash.verify(
+    if admin.username == ADMIN_USERNAME and password_hash.verify(
         admin.password,
         ADMIN_PASSWORD_HASH
     ):
+
+        access_token = create_access_token(admin.username, "admin")
+
         return {
-            "message": "Invalid username or password",
-            "success": False
+            "message": "Login successful",
+            "success": True,
+            "access_token": access_token,
+            "token_type": "bearer"
         }
 
     return {
-        "message": "Login successful",
-        "success": True
+        "message": "Invalid username or password",
+        "success": False
     }
     
 @app.get("/services")
@@ -107,3 +171,15 @@ def get_services():
         services = json.load(f)
 
     return  services
+
+@app.get("/admin/dashboard")
+def admin_dashboard(
+    current_admin: dict = Depends(get_current_admin)
+):
+    return {
+        "message": "Welcome to Admin Dashboard",
+        "username": current_admin["username"],
+        "role": current_admin["role"]
+    }
+    
+
