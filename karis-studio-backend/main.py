@@ -9,6 +9,10 @@ from dotenv import load_dotenv
 from datetime import datetime, timedelta, timezone
 from fastapi.security import OAuth2PasswordBearer
 
+# JWT
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+
+# Password hashing
 
 password_hash = PasswordHash.recommended()
 load_dotenv(dotenv_path=".env")
