@@ -2,6 +2,17 @@ from fastapi import FastAPI
 from pydantic import BaseModel 
 from fastapi.middleware.cors import CORSMiddleware
 import json
+from pwdlib import PasswordHash
+
+password_hash = PasswordHash.recommended()
+
+
+ADMIN_USERNAME = "admin"
+
+ADMIN_PASSWORD_HASH = "$argon2id$v=19$m=65536,t=3,p=4$EWp4FucckgPGpxs5RNXbkA$2JjhwVleHSIvI0kyMlxIzg7xYv4owtYGgJ3PrI3WgdI"
+
+
+
 
 app = FastAPI(
     title="Karis Studio API",
@@ -69,12 +80,30 @@ def save_bookings(booking: Booking):
 
 @app.post("/admin/login")
 def admin_login(admin: AdminLogin):
-    if admin.username == "admin" and admin.password == "12345":
+
+    if admin.username != ADMIN_USERNAME:
         return {
-            "message": "Login successful",
-            "success": "True"
+            "message": "Invalid username or password",
+            "success": False
         }
+
+    if not password_hash.verify(
+        admin.password,
+        ADMIN_PASSWORD_HASH
+    ):
+        return {
+            "message": "Invalid username or password",
+            "success": False
+        }
+
     return {
-        "message": "Invalid username or password",
-        "success": "False"
+        "message": "Login successful",
+        "success": True
     }
+    
+@app.get("/services")
+def get_services():
+    with open("services.json", "r") as f:
+        services = json.load(f)
+
+    return  services
