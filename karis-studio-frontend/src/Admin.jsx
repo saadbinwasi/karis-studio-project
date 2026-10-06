@@ -1,5 +1,6 @@
 import { useState } from "react";
 import AdminDashboard from "./AdminDashboard";
+import "./admin.css";
 
 function Admin() {
   const [username, setUsername] = useState("");
@@ -7,8 +8,6 @@ function Admin() {
   const [message, setMessage] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
 
-  // Agar login successful hai,
-  // to login form ki jagah dashboard show hoga
   if (loggedIn) {
     return <AdminDashboard />;
   }
@@ -17,11 +16,9 @@ function Admin() {
     e.preventDefault();
 
     const loginData = {
-      username: username,
-      password: password,
+      username,
+      password,
     };
-
-    console.log("Sending:", loginData);
 
     try {
       const response = await fetch(
@@ -39,64 +36,96 @@ function Admin() {
 
       console.log("Backend response:", data);
 
-     if (data.success) {
+      if (data.success) {
+        localStorage.setItem(
+          "access_token",
+          data.access_token
+        );
 
-    localStorage.setItem(
-        "access_token",
-        data.access_token
-    );
-
-    setLoggedIn(true);
-
-} else {
-
-    setMessage(data.message);
-
-}
+        setLoggedIn(true);
+      } else {
+        setMessage(data.message);
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setMessage("Something went wrong. Please try again.");
+    }
+  }
 
   return (
-    <div>
-      <h1>Karis Studio Admin</h1>
+    <div className="admin-login-page">
 
-      <h2>Admin Login</h2>
+      <div className="admin-login-card">
 
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>Username</label>
-
-          <input
-            type="text"
-            placeholder="Enter username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
+        <div className="admin-login-logo">
+          K
         </div>
 
-        <br />
+        <div className="admin-login-heading">
+          <p className="admin-login-eyebrow">
+            KARIS STUDIO
+          </p>
 
-        <div>
-          <label>Password</label>
+          <h1>Welcome Back</h1>
 
-          <input
-            type="password"
-            placeholder="Enter password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <p>
+            Sign in to access your admin dashboard.
+          </p>
         </div>
 
-        <br />
+        <form
+          onSubmit={handleLogin}
+          className="admin-login-form"
+        >
 
-        <button type="submit">
-          Login
-        </button>
+          <div className="admin-login-field">
+            <label>Username</label>
 
-        <p>{message}</p>
-      </form>
+            <input
+              type="text"
+              placeholder="Enter your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="admin-login-field">
+            <label>Password</label>
+
+            <input
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="admin-login-button"
+          >
+            Sign In
+          </button>
+
+          {message && (
+            <p className="admin-login-message">
+              {message}
+            </p>
+          )}
+
+        </form>
+
+        <p className="admin-login-footer">
+          Karis Studio Admin Panel
+        </p>
+
+      </div>
+
     </div>
   );
 }
 
 export default Admin;
+
