@@ -12,6 +12,11 @@ import {
   X,
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import PhoneInput, {
+  isValidPhoneNumber,
+} from "react-phone-number-input";
+
+import "react-phone-number-input/style.css";
 import "./App.css";
 import Admin from "./Admin";
 
@@ -154,17 +159,17 @@ function MyBookings() {
           className="my-bookings-form"
           onSubmit={searchBookings}
         >
+          {/* PHONE */}
+
           <label>
             Phone Number
 
-            <input
-              type="tel"
+            <PhoneInput
+              international
+              defaultCountry="PK"
               value={phone}
-              onChange={(e) =>
-                setPhone(e.target.value)
-              }
-              placeholder="+92 300 1234567"
-              required
+              onChange={setPhone}
+              placeholder="Enter phone number"
             />
           </label>
 
@@ -403,6 +408,11 @@ function App() {
   async function handleBookingSubmit(e) {
     e.preventDefault();
 
+    if (!phone || !isValidPhoneNumber(phone)) {
+      alert("Please enter a valid phone number.");
+      return;
+    }
+
     const bookingData = {
       name: name,
       phone: phone,
@@ -433,7 +443,7 @@ function App() {
       if (!response.ok) {
         alert(
           data.detail ||
-            "This appointment could not be booked."
+          "This appointment could not be booked."
         );
 
         return;
@@ -964,16 +974,14 @@ function App() {
           <div className="gallery-grid">
             {gallery.map((image, index) => (
               <div
-                className={`gallery-item gallery-${
-                  index + 1
-                }`}
+                className={`gallery-item gallery-${index + 1
+                  }`}
                 key={image}
               >
                 <img
                   src={image}
-                  alt={`Karis Studio gallery ${
-                    index + 1
-                  }`}
+                  alt={`Karis Studio gallery ${index + 1
+                    }`}
                 />
               </div>
             ))}
@@ -1253,14 +1261,12 @@ function App() {
               <label>
                 Phone Number
 
-                <input
-                  type="tel"
+                <PhoneInput
+                  international
+                  defaultCountry="PK"
                   value={phone}
-                  onChange={(e) =>
-                    setPhone(e.target.value)
-                  }
-                  placeholder="+92 300 1234567"
-                  required
+                  onChange={setPhone}
+                  placeholder="Enter phone number"
                 />
               </label>
 
@@ -1334,8 +1340,8 @@ function App() {
                       {loadingSlots
                         ? "Checking availability..."
                         : !date
-                        ? "Select date first"
-                        : "Select a time"}
+                          ? "Select date first"
+                          : "Select a time"}
                     </option>
 
                     {timeSlots.map((slot) => {
