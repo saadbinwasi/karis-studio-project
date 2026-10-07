@@ -9,15 +9,6 @@
         "status": "completed"
     },
     {
-        "id": 2,
-        "name": "zainab",
-        "service": "Glow Facial",
-        "date": "2026-10-07",
-        "time": "11:00",
-        "phone": "+3132257112",
-        "status": "pending"
-    },
-    {
         "id": 3,
         "name": "wania",
         "service": "Signature Haircut",
