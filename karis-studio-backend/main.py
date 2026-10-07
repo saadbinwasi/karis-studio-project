@@ -8,6 +8,7 @@ import os
 from dotenv import load_dotenv
 from datetime import datetime, timedelta, timezone
 from fastapi.security import OAuth2PasswordBearer
+from typing import Literal
 
 # JWT
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
@@ -105,6 +106,14 @@ class Booking(BaseModel):
 class AdminLogin(BaseModel):
     password: str
     username: str
+    
+class BookingStatus(BaseModel):
+    status: Literal[
+        "pending",
+        "confirmed",
+        "completed",
+        "cancelled"
+    ]
 
 
 
@@ -127,13 +136,25 @@ def save_bookings(booking: Booking):
     with open("booking.json", "r") as f:
         bookings = json.load(f)
 
+    for existing_booking in bookings:
+        if (
+            existing_booking["date"] == booking.date
+            and existing_booking["time"] == booking.time
+            and existing_booking["status"] != "cancelled"
+        ):
+            raise HTTPException(
+                status_code=400,
+                detail="This time slot is already booked."
+            )
+
     new_booking = {
         "id": len(bookings) + 1,
         "name": booking.name,
         "service": booking.service,
         "date": booking.date,
         "time": booking.time,
-        "phone": booking.phone
+        "phone": booking.phone,
+        "status": "pending"
     }
 
     bookings.append(new_booking)
@@ -146,6 +167,31 @@ def save_bookings(booking: Booking):
         "status": "running",
         "booking": new_booking
     }
+
+@app.patch("/admin/bookings/{booking_id}/status")
+def update_booking_status(booking_id: int,   status_data: BookingStatus):
+
+
+    with open("booking.json", "r") as f:
+        bookings = json.load(f)
+
+    for booking in bookings:
+        if booking["id"] == booking_id:
+
+            booking["status"] = status_data.status
+
+            with open("booking.json", "w") as f:
+                json.dump(bookings, f, indent=4)
+
+            return {
+                "message": "Booking status updated successfully",
+                "booking": booking
+            }
+
+    raise HTTPException(
+        status_code=404,
+        detail="Booking not found"
+    )
 
 @app.post("/admin/login")
 def admin_login(admin: AdminLogin):
@@ -187,3 +233,38 @@ def admin_dashboard(
     }
     
 
+@app.get("/booked-slots")
+def get_booked_slots(date: str):
+
+    with open("booking.json", "r") as f:
+        bookings = json.load(f)
+
+    booked_slots = []
+
+    for booking in bookings:
+        if (
+            booking["date"] == date
+            and booking["status"] != "cancelled"
+        ):
+            booked_slots.append(booking["time"])
+
+    return {
+        "date": date,
+        "booked_slots": booked_slots
+    }
+    
+    
+@app.get("/my-bookings")
+def get_my_bookings(phone: str):
+    with open("booking.json", "r") as f:
+        bookings = json.load(f)
+
+    customer_bookings = []
+
+    for booking in bookings:
+        if booking["phone"] == phone:
+            customer_bookings.append(booking)
+
+    return {
+        "bookings": customer_bookings
+    }
