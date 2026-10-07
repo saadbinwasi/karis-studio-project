@@ -1,26 +1,20 @@
 [
     {
         "id": 1,
-        "name": "saad",
+        "name": "wania",
         "service": "Luxury Pedicure",
-        "date": "2026-11-06",
-        "time": "17:53",
-        "phone": "+923132257112"
+        "date": "2026-10-07",
+        "time": "10:30",
+        "phone": "+923132257112",
+        "status": "confirmed"
     },
     {
         "id": 2,
-        "name": "wania",
+        "name": "zainab",
         "service": "Glow Facial",
-        "date": "2026-11-25",
-        "time": "05:54",
-        "phone": "+923132257118"
-    },
-    {
-        "id": 3,
-        "name": "Ayesha",
-        "service": "Manicure",
-        "date": "2026-10-05",
-        "time": "14:00",
-        "phone": "03001234567"
+        "date": "2026-10-07",
+        "time": "11:00",
+        "phone": "+3132257112",
+        "status": "pending"
     }
 ]
