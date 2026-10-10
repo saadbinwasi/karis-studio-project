@@ -1,20 +1,3 @@
 [
-    {
-        "id": 1,
-        "name": "wania",
-        "service": "Luxury Pedicure",
-        "date": "2026-10-07",
-        "time": "10:30",
-        "phone": "+923132257112",
-        "status": "completed"
-    },
-    {
-        "id": 3,
-        "name": "wania",
-        "service": "Signature Haircut",
-        "date": "2026-10-07",
-        "time": "12:00",
-        "phone": "+31323232",
-        "status": "pending"
-    }
+
 ]
