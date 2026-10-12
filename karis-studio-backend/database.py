@@ -1,3 +1,4 @@
+import os
 
 from sqlalchemy import (
     create_engine,
@@ -10,7 +11,11 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 
-DATABASE_URL = "sqlite:///./karis_studio.db"
+
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "sqlite:///./karis_studio.db"
+)
 
 engine = create_engine(
     DATABASE_URL,

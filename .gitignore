@@ -8,3 +8,16 @@ __pycache__/
 # Node
 node_modules/
 dist/
+
+# Python virtual environments
+venv/
+.venv/
+
+# SQLite databases and backups
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Python environment secrets
+.env
