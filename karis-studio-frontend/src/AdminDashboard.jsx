@@ -1,3 +1,4 @@
+import API_URL from "./api";
 import { useEffect, useState } from "react";
 import "./admin.css";
 
@@ -21,7 +22,7 @@ function AdminDashboard() {
         try {
 
             const response = await fetch(
-                "http://127.0.0.1:8000/bookings",
+                `${API_URL}/bookings`,
                 {
                     method: "GET",
 
@@ -81,7 +82,7 @@ function AdminDashboard() {
         try {
 
             const response = await fetch(
-                `http://127.0.0.1:8000/admin/bookings/${bookingId}/status`,
+                `${API_URL}/admin/bookings/${bookingId}/status`,
                 {
                     method: "PATCH",
 
@@ -186,7 +187,7 @@ function AdminDashboard() {
         try {
 
             const response = await fetch(
-                `http://127.0.0.1:8000/admin/bookings/${bookingId}`,
+                `${API_URL}/admin/bookings/${bookingId}`,
                 {
                     method: "DELETE",
 
