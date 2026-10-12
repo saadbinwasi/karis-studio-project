@@ -1,3 +1,4 @@
+import API_URL from "./api";
 import { useState } from "react";
 import AdminDashboard from "./AdminDashboard";
 import "./admin.css";
@@ -22,7 +23,7 @@ function Admin() {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/admin/login",
+        `${API_URL}/admin/login`,
         {
           method: "POST",
           headers: {

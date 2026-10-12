@@ -1,3 +1,4 @@
+import API_URL from "./api";
 import {
   ArrowRight,
   CalendarDays,
@@ -94,7 +95,7 @@ function MyBookings() {
 
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/my-bookings?phone=${encodeURIComponent(
+        `${API_URL}/my-bookings?phone=${encodeURIComponent(
           phone
         )}`
       );
@@ -293,7 +294,7 @@ function App() {
   ===================================================== */
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/services")
+    fetch(`${API_URL}/services`)
       .then((response) => response.json())
       .then((data) => {
         setServices(data);
@@ -321,7 +322,7 @@ function App() {
     setTime("");
 
     fetch(
-      `http://127.0.0.1:8000/booked-slots?date=${date}`
+      `${API_URL}/booked-slots?date=${date}`
     )
       .then((response) => {
         if (!response.ok) {
@@ -423,7 +424,7 @@ function App() {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/bookings",
+        `${API_URL}/bookings`,
         {
           method: "POST",
           headers: {
